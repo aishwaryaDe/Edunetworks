@@ -1,0 +1,303 @@
+﻿@using Microsoft.AspNet.Identity.Owin;
+@{
+    var userName = Session["UserName"];
+    var userid = Session["UserID"];
+    string mainUrl = System.Configuration.ConfigurationManager.AppSettings["ActualUrl"];
+    string emailTwitter = System.Configuration.ConfigurationManager.AppSettings["EmailTwitter"].ToString();
+    string emailFacebook = System.Configuration.ConfigurationManager.AppSettings["EmailFacebook"].ToString();
+    string linkedinUrl = System.Configuration.ConfigurationManager.AppSettings["LinkedinUrl"].ToString();
+    string mainLogo = System.Configuration.ConfigurationManager.AppSettings["MainLogo"].ToString();
+    string phoneNumber = System.Configuration.ConfigurationManager.AppSettings["Telephone"].ToString();
+    string contactPageEmailId = System.Configuration.ConfigurationManager.AppSettings["ContactPageEmailId"].ToString();
+
+    int roleID = 0;
+    if (Session["RoleID"] != null)
+    {
+        roleID = int.Parse(Session["RoleID"].ToString());
+    }
+}
+<link rel="stylesheet" type="text/css" href="~/coursat/css/custom.css">
+<link rel="stylesheet" type="text/css" href="~/coursat/rs-plugin/css/settings.css" media="screen" />
+<div class="topbar clearfix">
+    <div class="container">
+        <div class="clearfix">
+            <div class="pull-left">
+                <div class="contactwrap text-left">
+                    <ul class="list-inline">
+                        <li><i class="fa fa-phone"></i> @String.Format("Call Us : {0}", phoneNumber)</li>
+                        <li><i class="fa fa-envelope"></i> @String.Format("{0}", contactPageEmailId)</li>                        
+                    </ul>
+                </div><!-- end contactwrap -->
+            </div><!-- end col -->
+            <div class="pull-right">
+                <ul class="social">
+                    <li class="facebook"><a href="@String.Format("{0}", emailFacebook)"><i class="fa fa-facebook"></i></a></li>
+                    <li class="twitter"><a href="@String.Format("{0}", emailTwitter)"><i class="fa fa-twitter"></i></a></li>
+                    <li class="google"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                    <li class="pinterest"><a href="#"><i class="fa fa-pinterest"></i></a></li>
+                    <li class="vimeo"><a href="#"><i class="fa fa-vimeo-square"></i></a></li>
+                    <li class="linkedin"><a href="@String.Format("{0}", linkedinUrl)"><i class="fa fa-linkedin"></i></a></li>
+                    <li class="dribbble"><a href="#"><i class="fa fa-dribbble"></i></a></li>
+                    <li class="youtube"><a href="#"><i class="fa fa-youtube"></i></a></li>
+                    <li class="rss"><a href="#"><i class="fa fa-rss"></i></a></li>
+                </ul>
+            </div><!-- end col -->
+        </div><!-- end row -->
+    </div><!-- end container -->
+</div><!-- end topbar -->
+    <header class="header clearfix">
+        <div class="container">
+            <nav class="yamm navbar navbar-default">
+                <div class="navbar-header"> 
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/Home/Index"><img src="@String.Format("{0}{1}",mainUrl,mainLogo)" style="width: 136px;margin-top: 0px;" alt=""></a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "AllCourses" ? "active" : "")">@Html.ActionLink("Courses", "AllCourses", "Course")</li>
+                        <li class="dropdown megamenu @(ViewContext.RouteData.Values["Action"].ToString() == "Press" ? "active" : "")">
+                            <a href="/PressRelease/Press" id="AboutUsId">About Us</a>
+                        </li>             
+                        <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Contact" ? "active" : "")"><a href="/Home/Contact">Contact</a></li>
+                        <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "FAQ" ? "active" : "")"><a href="/Home/FAQ">FAQ</a></li>
+                        <li class="noborder">
+
+                            <div id="dmsearch" class="dmsearch">
+                                <form id="search-form" action="#" method="get">
+                                    <div id="hideshow" class="input-group">
+                                        <input id="search" class="dmsearch-input form-control style-2 typeahead scrollable" type="text" name="search" value="" placeholder="Search" style="background-color:white;" />
+                                    </div>
+                                    <input id="CourseID" class="dmsearch-submit btn" type="submit" value="">
+                                    <span class="fa fa-search" style="z-index:2;"></span>
+                                </form> <!-- end searchform -->
+                            </div><!-- end search -->
+                        </li>
+                        <li class="dropdown megamenu" style="position:relative;border:0 !important; margin: 0px 0px 0px 20px;">
+                            @if (userName == null)
+                            {
+                                <a href="/Account/Login">Login</a>
+                            }
+                            else
+                            {
+                                <div style="">
+                                    <a href="#" >
+                                        <span class="user-span">@userName.ToString().Substring(0, 1).ToUpper()</span>
+                                    </a>
+                                    <ul class="dropdown-menu" style="top:66px;">
+                                        <li style="text-align: center;">
+                                            @*<i class="fa fa-sort-up icon-cog" style="position:fixed;top: 58px; right:71px; font-size: 1.8em;opacity: 1;"></i>*@
+                                            <div class="yamm-content" style="border: 2px solid #f5f5f5;">
+                                                <div class="box" style="left:-117px;display:block" id="log">
+                                                    <label class="lblUserName" style="text-align:center;text-decoration:underline;">@userName</label>
+                                                    <span id="courselist">
+                                                        <a href="@Url.Action("Profile", "UserRegister", new { id = userid})">Dashboard</a>
+                                                    </span>
+                                                    @*<span id="courselist">
+                                                        <a href="@Url.Action("Profile", "UserRegister", new { id = userid})">My Account</a>
+                                                    </span>*@
+                                                    <span id="Cart">
+                                                        <a href="/Order/Details" id="cartItemCount"></a>
+                                                    </span>
+                                                    @Html.RouteLink("Logout", new { action = "LoginOut", controller = "UserRegister" }, new { id = "logoutBtn" })
+                                                </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                </div>
+                            }
+                        </li>
+                   
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </nav><!-- end nav -->
+        </div><!-- end container -->
+    </header><!-- end header -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <script type="text/javascript">
+    var substringMatcher = function (strs) {
+        return function findMatches(q, cb) {
+            var matches, substringRegex;
+
+            // an array that will be populated with substring matches
+            matches = [];
+
+            // regex used to determine if a string contains the substring `q`
+            substrRegex = new RegExp(q, 'i');
+
+            // iterate through the pool of strings and for any string that
+            // contains the substring `q`, add it to the `matches` array
+            $.each(strs, function (i, str) {
+                if (substrRegex.test(str)) {
+                    // the typeahead jQuery plugin expects suggestions to a
+                    // JavaScript object, refer to typeahead docs for more info
+                    matches.push({ value: str });
+                }
+            });
+
+            cb(matches);
+        }
+    }
+</script>
+    <script type="text/javascript">
+
+    var currentCourses = '';
+    var cartName = "CourseDetails";
+    function ActivateCouponEnterClickEvent(e) {
+
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if (code == 13) { //Enter keycode
+            ActivateCoupon();
+        }
+    }
+    $(document).ready(function () {
+        
+        $(".couponTextChange").change(function () {
+            var couponCode = $('#actCoupontxt')[0].value;
+            if (couponCode == "") {
+                localStorage.CouponCode = null;
+            }
+        });
+
+        $('#AboutUsId').addClass("sf-with-ul");
+
+        var cartCount = 0;
+        var uId = '@userid';
+        if ($('#cartItemCount').length > 0) {
+            if (cartCount == "Nan") {
+                cartCount = 0;
+            }
+            $('#cartItemCount')[0].innerHTML = "My Cart (" + cartCount + ")";
+
+        }
+        if (window.localStorage[cartName] != null || window.localStorage[cartName] != undefined) {
+            currentCourses = JSON.parse(window.localStorage[cartName]);
+        }
+        if ($('#cartItemCount').length > 0) {
+            for (var i = 0; i < currentCourses.length; i++) {
+                if (currentCourses[i].CourseUserId == uId) {
+                    var count = 0;
+                    count = currentCourses.length;
+                    cartCount = cartCount + 1;
+                    if (cartCount == "Nan") {
+                        cartCount = 0;
+                    }
+                    $('#CartCount').val(cartCount);
+                    $('#cartItemCount')[0].innerHTML = "My Cart (" + cartCount + ")";
+                    $('#Cart').css("display", "block");
+                }
+            }
+        }
+        });
+        $("#CourseID").click(function () {
+
+            var searchTextFind = $('#search')[0].value;
+            var searchTextCat = searchTextFind.split("in category");
+            var searchText = searchTextCat[0];
+
+
+            if (searchText != "") {
+                window.location.href = "/Course/AllCourses?id=0&type=none&courseName=" + searchText;
+                return false;
+            }
+        });
+    function ActivateCoupon() {
+        var couponCode = $('#actCoupontxt')[0].value;
+        if (couponCode != "") {
+            localStorage.CouponCode = couponCode.trim();
+            window.location.href = "/Account/Login";
+        }
+        else {
+
+            bootbox.dialog({
+                message: "Please enter the coupon code",
+                buttons: {
+                    "success": {
+                        "label": "OK",
+                        "className": "btn-sm btn-primary"
+                    }
+                }
+            });
+        }
+    }
+    </script>
+
+<script src="~/Content/assets/js/ace/elements.typeahead.js"></script>
+<script src="~/Content/assets/js/typeahead.jquery.js"></script>
+<script type="text/javascript">
+    var courseList = [];
+    $(function () {
+
+        var $container = $('#ib-container'),
+            $articles = $container.children('article'),
+            timeout;
+
+        $articles.on('mouseenter', function (event) {
+
+            var $article = $(this);
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+
+                if ($article.hasClass('active')) return false;
+
+                $articles.not($article.removeClass('blur').addClass('active'))
+                    .removeClass('active')
+                    .addClass('blur');
+
+            }, 65);
+
+        });
+
+        $container.on('mouseleave', function (event) {
+
+            clearTimeout(timeout);
+            $articles.removeClass('active blur');
+        });
+
+    });
+
+    $("#hideshow").hide();
+    $('#search').typeahead({
+        hint: true,
+        highlight: true,
+        minLength: 1
+    }, {
+            name: 'course',
+            displayKey: 'value',
+            source: substringMatcher(getCourse())
+        });
+    function getCourse() {
+        var bindCourseList = [];
+        $.ajax({
+            type: "POST",
+            async: true,
+            data: "",
+            contentType: 'application/json; charset=utf-8',
+            url: "/Course/GetCourses",
+            success: function (response) {
+                for (var i = 0; i < response.length; i++) {
+                    courseList.push({ cid: response[i][0].Value, cname: response[i][1].Value });
+                    var courseName = response[i][0].Value;
+                    bindCourseList.push(courseName);
+                }
+                return bindCourseList;
+            },
+            error: function (response) {
+                localStorage.clear();
+            }
+        });
+
+        return bindCourseList;
+    }
+
+
+</script>
+
+
+
+

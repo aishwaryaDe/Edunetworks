@@ -1,0 +1,214 @@
+﻿@using Millionlights.Models;
+@using System.Collections.Generic;
+
+@{
+    string newPartnerName = System.Configuration.ConfigurationManager.AppSettings["SenderName"].ToString();
+    string emailTwitter = System.Configuration.ConfigurationManager.AppSettings["EmailTwitter"].ToString();
+    string emailFacebook = System.Configuration.ConfigurationManager.AppSettings["EmailFacebook"].ToString();
+    string linkedinUrl = System.Configuration.ConfigurationManager.AppSettings["LinkedinUrl"].ToString();
+    var telephone = System.Configuration.ConfigurationManager.AppSettings["Telephone"];
+    string contactPageEmailId = System.Configuration.ConfigurationManager.AppSettings["ContactPageEmailId"].ToString();
+    string aboutUs1 = System.Configuration.ConfigurationManager.AppSettings["AboutUs1"].ToString();
+
+    ViewBag.Title = "_MainFooter";
+    List<ShortCourse> allCourses = (List<ShortCourse>)Session["AllCourses"];
+    var count = 0;
+    var userName = Session["UserName"];
+    var userid = Session["UserID"];
+    int roleID = 0;
+    if (Session["RoleID"] != null)
+    {
+        roleID = int.Parse(Session["RoleID"].ToString());
+    }
+}
+
+@if (roleID != 2)
+{
+
+    <footer class="footer">
+        @if (userName == null)
+        {          
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-sm-6">
+                        <div class="widget about-widget wow fadeIn" data-wow-duration="1s" data-wow-delay="0.2s">
+                            <div class="widget-title">
+                                <h4>About</h4>
+                            </div><!-- end widget-title -->
+                            <p>@String.Format("{0}", aboutUs1)
+                            </p>
+                            <ul class="contact-details">
+                                    <li><i class="fa fa-phone"></i> @String.Format("{0}", telephone)</li>
+                                <li><i class="fa fa-envelope"></i> @String.Format("{0}", contactPageEmailId)</li>
+                            </ul><!-- end contact-details -->
+                        </div><!-- end widget -->
+                    </div><!-- end col -->
+
+                    <div class="col-md-4 col-sm-6">
+                        <div class="widget about-widget wow fadeIn" data-wow-duration="1s" data-wow-delay="0.3s">
+                            <div class="widget-title">
+                                <h4>Latest Courses</h4>
+                            </div><!-- end widget-title -->
+                            <ul class="latest-course">
+                                <li>
+                                    <h4>Social Dialogue & Employment Relations In Africa 2017 Summit</h4>
+                                    <span>Date : 22-24 March 2017</span>
+                                    <span>Venue : Empire Executive Apartments and Hotel, Sandton, Johannesburg. South Africa</span>
+                                </li>
+                                <li>
+                                    <h4>Hazardous Materials Safe Handling Masterclass 2017</h4>
+                                    <span>Date : 16-18 March 2017</span>
+                                    <span>Venue : Empire Executive Apartments and Hotel, Sandton, Johannesburg. South Africa</span>
+                                </li>
+                            </ul><!-- end latest-course -->
+                        </div><!-- end widget -->
+                    </div><!-- end col -->
+
+
+                    <div class="col-md-4 col-sm-6">
+ 
+                        <div class="widget about-widget wow fadeIn" data-wow-duration="1s" data-wow-delay="0.4s">
+                            <div class="widget-title">
+                                <h4>Follow Us</h4>
+                            </div><!-- end widget-title -->
+                            <ul class="social">
+                                <li class="facebook"><a href="@String.Format("{0}", emailFacebook)" target ="_blank"><i class="fa fa-facebook"></i></a></li>
+                                <li class="twitter"><a href="@String.Format("{0}", emailTwitter)" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                                <li class="google"><a href="#"><i class="fa fa-google"></i></a></li>
+                                <li class="linkedin"><a href="@String.Format("{0}", linkedinUrl)" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                            </ul>
+                        </div><!-- end widget -->
+                    </div><!-- end col -->
+                    <!--
+                    <div class="col-md-4 col-sm-6">
+                        <div class="widget about-widget wow fadeIn" data-wow-duration="1s" data-wow-delay="0.5s">
+                            <div class="widget-title">
+                                <h4>Latest Tweets</h4>
+                            </div><!-- end widget-title
+                            <ul class="latest-tweets">
+                                <li>
+                                    <span>2 hours ago</span>
+                                </li>
+                                <li>
+                                    <span>2 hours ago</span>
+                                </li>
+                            </ul> end latest-course
+                        </div> end widget 
+                    </div> end col -->
+                </div><!-- end row -->
+            </div><!-- end container -->
+        }
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+        <script type="text/javascript">
+            function CustomersQuery() {
+                var queryEmail = $('#email_newsletter').val();
+                var fullName = '';
+                var message = '';
+                if (queryEmail != "") {
+                    if (isEmail(queryEmail) == false) {
+                        bootbox.dialog({
+                            message: "Please enter valid email id.",
+                            buttons: {
+                                "success": {
+                                    "label": "OK",
+                                    "className": "btn-sm btn-primary",
+                                    callback: function () {
+                                    }
+                                }
+                            }
+                        });
+                        return false;
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            async: false,
+                            data: JSON.stringify({ "queryEmail": queryEmail, "fullName": fullName, "message": message, "phoneNumber": null }),
+                            contentType: 'application/json; charset=utf-8',
+                            url: "/MarketingCampaign/CustomersQuery",
+                            success: function (response) {
+                                if (response == "true") {
+                                    bootbox.dialog({
+                                        message: "Thank you for showing the interest, we'll getback to you soon!",
+                                        buttons: {
+                                            "success": {
+                                                "label": "OK",
+                                                "className": "btn-sm btn-primary",
+                                                callback: function () {
+                                                    location.href = '/Home/Index';
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                                else {
+                                    bootbox.dialog({
+                                        message: "Email could not be sent due to some problems. Please try later.",
+                                        buttons: {
+                                            "success": {
+                                                "label": "OK",
+                                                "className": "btn-sm btn-primary",
+                                                callback: function () {
+                                                    location.href = '/Home/Index';
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (response) {
+                                bootbox.dialog({
+                                    message: "Email could not be sent due to some problems. Please try later.",
+                                    buttons: {
+                                        "success": {
+                                            "label": "OK",
+                                            "className": "btn-sm btn-primary",
+                                            callback: function () {
+                                                location.href = '/Home/Index';
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+
+                }
+                else {
+                    bootbox.dialog({
+                        message: "Please provide an email.",
+                        buttons: {
+                            "success": {
+                                "label": "OK",
+                                "className": "btn-sm btn-primary",
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                }
+                return false;
+            }
+            function isEmail(emailid) {
+                var emailRegex = "^[-!#$%&'*+/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+/0-9=?A-Z^_a-z{|}~])*@@[a-zA-Z](-?[a-zA-Z0-9])*(\.[a-zA-Z](-?[a-zA-Z0-9])*)+$";
+                if (!emailid.match(emailRegex)) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+        </script>
+        
+    </footer>
+    <section class="copyrights">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 text-right">
+                    <p>@String.Format("Copyright © {0} 2017. All Rights Reserved", newPartnerName)</p>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section><!-- end copyrights -->
+
+}

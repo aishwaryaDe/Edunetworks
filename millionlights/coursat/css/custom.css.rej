@@ -1,0 +1,10 @@
+diff a/millionlights/coursat/css/custom.css b/millionlights/coursat/css/custom.css	(rejected hunks)
+@@ -94,7 +94,7 @@
+     margin: 0;
+     border: 1px solid #d8d8da;
+     padding-right: 30px !important;
+-    text-overflow: ellipsis !important;
++    text-overflow: "�" !important;
+     white-space: nowrap !important;
+     overflow: hidden !important;
+ }

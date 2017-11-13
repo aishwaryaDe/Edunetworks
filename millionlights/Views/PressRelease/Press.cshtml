@@ -1,0 +1,103 @@
+﻿@{
+    int roleID = 0;
+    if (Session["RoleID"] != null)
+    {
+        roleID = int.Parse(Session["RoleID"].ToString());
+    }
+    if (roleID != 0)
+    {
+        if (roleID == 1 || roleID == 3)
+        {
+            Layout = "~/Views/Shared/_AceLandingLayout.cshtml";
+            <script src="~/Content/assets/js/jquery.js"></script>
+        }
+        else
+        {
+            Layout = "~/Views/Shared/_Layout.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    string mainUrl = System.Configuration.ConfigurationManager.AppSettings["ActualUrl"];
+    string newPartnerName = System.Configuration.ConfigurationManager.AppSettings["SenderName"].ToString();
+    string silderImage1 = System.Configuration.ConfigurationManager.AppSettings["SilderImage1"];
+    string aboutUs1 = System.Configuration.ConfigurationManager.AppSettings["AboutUs1"].ToString();
+    string aboutUs2 = System.Configuration.ConfigurationManager.AppSettings["AboutUs2"].ToString();
+    string aboutUs3 = System.Configuration.ConfigurationManager.AppSettings["AboutUs3"].ToString();
+    string ourMission1 = System.Configuration.ConfigurationManager.AppSettings["OurMission1"].ToString();
+    string ourMission2 = System.Configuration.ConfigurationManager.AppSettings["OurMission2"].ToString();
+    string ourMission3 = System.Configuration.ConfigurationManager.AppSettings["OurMission3"].ToString();
+    string ourMission4 = System.Configuration.ConfigurationManager.AppSettings["OurMission4"].ToString();
+    string ourMission5 = System.Configuration.ConfigurationManager.AppSettings["OurMission5"].ToString();
+    string ourMission6 = System.Configuration.ConfigurationManager.AppSettings["OurMission6"].ToString();
+    string ourMission7 = System.Configuration.ConfigurationManager.AppSettings["OurMission7"].ToString();
+
+    ViewBag.Title = String.Format("{0}", newPartnerName);
+    var msg = ViewBag.message;
+    var pressData = ViewBag.PressData;
+    var PressHeading = ViewBag.PressPageHeading;
+}
+@*<script type="text/javascript" src="~/Content/assets/js/slider/jssor.slider.mini.js"></script>*@
+
+
+@*<link rel="shortcut icon" href="Content/learn/img/favicon.ico" type="image/x-icon" />*@
+<link rel="apple-touch-icon" type="image/x-icon" href="img/apple-touch-icon-57x57-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
+
+
+<section id="blog_parallax" class="section-white page-title-wrapper" data-stellar-background-ratio="1" data-stellar-offset-parent="true">
+    <div class="container">
+        <div class="relative">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="section-title text-center">
+                        <img src="@String.Format("{0}{1}",mainUrl,silderImage1)" style="width:100%;height:100%;" alt="fullslide1" data-bgposition="center top" >
+                    </div><!-- end title -->
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end relative -->
+    </div><!-- end container -->
+</section><!-- end section-white -->
+<section class="section-white">
+    <div class="container">
+        <div class="row">
+            <div id="content" class="col-md-8 col-sm-12 pull-right">
+
+                <div class="blog-entry">
+                    <div class="blog-title">
+                        <h3>About Us</h3>
+                    </div>
+                    <div class="blog-desc" >
+                        <p style="margin-top: 10px;">@String.Format("{0}", aboutUs1)</p>
+                        <p>@String.Format("{0}", aboutUs2)</p>
+                        <p>@String.Format("{0}", aboutUs3)</p>
+                    </div><!-- end blog-desc -->
+                </div><!-- end blog -->                               
+            </div><!-- end content -->
+            <div id="sidebar" class="col-md-4 col-sm-12 pull-left">
+                <div class="widget">
+                    <div class="widget-title">
+                        <h4>Our Mission</h4>
+                    </div><!-- end widget-title -->
+                    <div class="cat-widget">
+                    <ul class="bullet">
+                       <li><i class="fa fa-dot-circle-o"></i>@String.Format("{0}", ourMission1)</li>
+                       <li><i class="fa fa-dot-circle-o"></i>@String.Format("{0}", ourMission2)</li>
+                       <li><i class="fa fa-dot-circle-o"></i>@String.Format("{0}", ourMission3)</li>
+                       <li><i class="fa fa-dot-circle-o"></i>@String.Format("{0}", ourMission4)</li>
+                       <li><i class="fa fa-dot-circle-o"></i>@String.Format("{0}", ourMission5)</li>
+                       <li><i class="fa fa-dot-circle-o"></i>@String.Format("{0}", ourMission6)</li>
+                       <li><i class="fa fa-dot-circle-o"></i>@String.Format("{0}", ourMission7)</li>
+                    </ul>              
+                    </div><!-- end latest-course -->
+                </div><!-- end widget -->   
+                                
+            </div><!-- end col -->
+        </div><!-- end row -->
+    </div><!-- end container -->
+</section><!-- end section-white -->
+

@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Transaction completed successfuly!!";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    var FreeCourses = ViewBag.FreeCourse;
+    var userid = Session["UserID"];
+
+    int roleID = 0;
+    if (Session["RoleID"] != null)
+    {
+        roleID = int.Parse(Session["RoleID"].ToString());
+    }
+    if (roleID != 0)
+    {
+        if (roleID == 1 || roleID == 3)
+        {
+            Layout = "~/Views/Shared/_AceLandingLayout.cshtml";
+            @*<script src="~/Content/assets/js/jquery.js"></script>*@
+        }
+        else
+        {
+            Layout = "~/Views/Shared/_Layout.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12" style="text-align: center;">
+        <h3 id="courselist">
+    Thank you! We have submitted your order successfully.Please go to your <span style="font-weight:bold; text-decoration: underline;"><a href="@Url.Action("Profile", "UserRegister", new { id = userid})">dashboard</a></span> to start learning.
+</h3><br />
+        <p>(To avoid sending duplicate orders, please do not click the browser Back button.)</p>
+    </div>
+</div>
+<hr />
+<section id="main_content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-info filterable add_bottom_45">
+                    @*<div class="panel-heading" style="background-color: lightgray !important;color:lightgray !important;border-color:lightgray !important;">
+                        <h3 class="panel-title">Order Status</h3>
+                    </div>*@
+                    @foreach (var freeCourses in FreeCourses)
+                    {
+                        <table id="CourseOrderSuccess" class="table table-responsive table-striped gridPadding">
+                            <thead class="theadColor">
+                                <tr>
+                                    <th class="coursePrice successMag">Course Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class=""><p>@Html.Raw(freeCourses.CheckoutCourses)</p></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@*<script src="~/Content/learn/js/jquery-1.10.2.min.js"></script>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        var cartName = "CourseDetails";
+        window.localStorage.removeItem(cartName);
+        localStorage.removeItem('CourseId');
+        window.localStorage.removeItem('CouponCode');
+        localStorage.removeItem('CouponCode');
+        lwindow.localStorage.clear();
+        $.removeCookie("CouponCode");
+        setCookie("CouponCode", "", -1);
+    });
+</script>

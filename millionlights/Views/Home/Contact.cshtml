@@ -1,0 +1,363 @@
+﻿@model Millionlights.Models.ContactUs
+
+@{
+    string newPartnerName = System.Configuration.ConfigurationManager.AppSettings["SenderName"].ToString();
+
+    ViewBag.Title = String.Format("{0}", newPartnerName);
+    int roleID = 0;
+    if (Session["RoleID"] != null)
+    {
+        roleID = int.Parse(Session["RoleID"].ToString());
+    }
+    if (roleID != 0)
+    {
+        if (roleID == 1 || roleID == 3)
+        {
+            Layout = "~/Views/Shared/_AceLandingLayout.cshtml";
+            <script src="~/coursat/js/jquery.min.js"></script>
+
+        }
+        else
+        {
+            Layout = "~/Views/Shared/_Layout.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    var userName = Session["UserName"];
+}
+@{
+    var messages = (Dictionary<string, string>)ViewBag.Messages;
+    //var emailId = System.Configuration.ConfigurationManager.AppSettings["EmailId"];
+    var telephone = System.Configuration.ConfigurationManager.AppSettings["Telephone"];
+    string contactPageEmailId = System.Configuration.ConfigurationManager.AppSettings["ContactPageEmailId"].ToString();
+    string businessHours = System.Configuration.ConfigurationManager.AppSettings["BusinessHours"].ToString();
+    string address = System.Configuration.ConfigurationManager.AppSettings["Address"].ToString();
+
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+<script type="text/javascript">
+    function ContactUsQuery() {
+        var isValid = ValidateContact();
+        if (isValid == true) {
+            var firstName = $('#name_contact')[0].value;
+            //var lastName = $('#lastname_contact')[0].value;
+            var fullName = firstName ;
+            var queryEmail = $('#email_contact')[0].value;
+            var message = $('#message_contact')[0].value;
+            var phoneNumber = $('#phone_contact')[0].value;
+            $.ajax({
+                type: "POST",
+                async: false,
+                data: JSON.stringify({ "queryEmail": queryEmail, "fullName": fullName, "message": message, "phoneNumber": phoneNumber }),
+                contentType: 'application/json; charset=utf-8',
+                url: "/MarketingCampaign/CustomersQuery",
+                success: function (response) {
+                    if (response == "true") {
+                        $('#successMessage')[0].innerHTML = '@messages["QuerySubmit"]'
+                    }
+                    else {
+                        $('#successMessage')[0].innerHTML = '@messages["NotSendEmailForIssue"]'
+                    }
+                },
+                error: function (response) {
+                    $('#successMessage')[0].innerHTML = '@messages["NotSendEmailForIssue"]'
+                }
+            });
+        }
+        return false;
+    }
+    function ValidateContact() {
+        var isvalid = true;
+        var firstName = $('#name_contact')[0].value;
+        //var lastName = $('#lastname_contact')[0].value;
+        var email = $('#email_contact')[0].value;
+        var phoneNumber = $('#phone_contact')[0].value;
+        var message = $('#message_contact')[0].value;
+        var verify = $('#verify_contact')[0].value;
+
+        if (firstName.length == 0) {
+            bootbox.dialog({
+                message: "Please Enter Name.",
+                buttons: {
+                    "success": {
+                        "label": "OK",
+                        "className": "btn-sm btn-primary"
+                    }
+                }
+            });
+            isvalid = false;
+        }
+        //else if (lastName.length == 0) {
+        //    bootbox.dialog({
+        //        message: "Please Enter Last Name.",
+        //        buttons: {
+        //            "success": {
+        //                "label": "OK",
+        //                "className": "btn-sm btn-primary"
+        //            }
+        //        }
+        //    });
+        //    isvalid = false;
+        //}
+        else
+            if (email.length == 0) {
+                bootbox.dialog({
+                    message: "Please Enter Email.",
+                    buttons: {
+                        "success": {
+                            "label": "OK",
+                            "className": "btn-sm btn-primary"
+                        }
+                    }
+                });
+                isvalid = false;
+            }
+	    else
+
+                if (!isvalidateEmail(email)) {
+
+                    bootbox.dialog({
+
+                        message: "Please Enter Valid Email.",
+
+                        buttons: {
+
+                            "success": {
+
+                                "label": "OK",
+
+                                "className": "btn-sm btn-primary"
+
+                            }
+
+                        }
+
+                    });
+
+                    isvalid = false;
+
+                }
+            else
+                if (phoneNumber.length == 0) {
+                    bootbox.dialog({
+                        message: "Please Enter Phone Number.",
+                        buttons: {
+                            "success": {
+                                "label": "OK",
+                                "className": "btn-sm btn-primary"
+                            }
+                        }
+                    });
+                    isvalid = false;
+                }
+                else
+                    if (message.length == 0) {
+                        bootbox.dialog({
+                            message: "Please Enter Message.",
+                            buttons: {
+                                "success": {
+                                    "label": "OK",
+                                    "className": "btn-sm btn-primary"
+                                }
+                            }
+                        });
+                        isvalid = false;
+                    }
+                    else
+                        if (verify.length == 0) {
+                            bootbox.dialog({
+                                message: "Please Enter Verification code.",
+                                buttons: {
+                                    "success": {
+                                        "label": "OK",
+                                        "className": "btn-sm btn-primary"
+                                    }
+                                }
+                            });
+                            isvalid = false;
+                        }
+                        else
+                            if (verify.length > 0) {
+                                if (verify != 4) {
+                                    bootbox.dialog({
+                                        message: "Please Enter Correct Verification code.",
+                                        buttons: {
+                                            "success": {
+                                                "label": "OK",
+                                                "className": "btn-sm btn-primary"
+                                            }
+                                        }
+                                    });
+                                    isvalid = false;
+                                }
+
+                            }
+        return isvalid;
+    }
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+    function isvalidateEmail(email) {
+
+        var filter = /^[\w\-\.\+]+\@@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+
+        return filter.test(email);
+
+    }
+</script>
+<style type="text/css">
+    ul#aceContact-info {
+        list-style: none;
+        margin: 0 0 20px 0;
+        padding: 0;
+    }
+
+    .aceBox_style_2 {
+        background: #f9f9f9;
+        border: 1px solid #f3f3f3;
+        padding: 30px;
+        position: relative;
+    }
+</style>
+@if (userName != "" && roleID == 1)
+{
+    <section id="main_content">
+        <div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Address</h3>
+                    <ul id="aceContact-info">
+                        <li><i class="ace fa fa-phone"></i> @String.Format("{0}", telephone)</li>
+                        <li><i class="ace fa fa-envelope"></i> <a href="mailto:@String.Format("{0}", contactPageEmailId)"> @String.Format("{0}", contactPageEmailId)</a></li>
+                    </ul>
+                    <hr>
+                </div>
+                <div class="col-md-8">
+                    <div class="aceBox_style_2">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3>General Enquiry</h3>
+                            </div>
+                        </div>
+                        <div id="message-contact"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control style_2" id="name_contact" name="name_contact" placeholder="Enter Name">
+                                    <span class="input-icon"><i class="icon-user"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control style_2" id="lastname_contact" name="lastname_contact" placeholder="Enter Last Name">
+                                    <span class="input-icon"><i class="icon-user"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <input type="email" id="email_contact" name="email_contact" class="form-control style_2" placeholder="Enter Email">
+                                    <span class="input-icon"><i class="icon-email"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" id="phone_contact" name="phone_contact" class="form-control style_2" placeholder="Enter Phone number" onkeypress="return isNumberKey(event)">
+                                    <span class="input-icon"><i class="icon-phone"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <textarea rows="5" id="message_contact" name="message_contact" class="form-control contact-message" placeholder="Write your message"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="allowmargin"><input type="text" id="verify_contact" class="form-control" placeholder="Are you human? 3 + 1 ="></p>
+                                <input type="submit" class="btn btn-success" value="Submit" onclick="return ContactUsQuery()" />
+                            </div>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.PhoneNo, "", new { id = "successMessage" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="section-title text-center">
+                <h4>Contact Us</h4>
+            </div><!-- end title -->
+        </div><!-- end col -->
+    </div><!-- end row -->
+    <section class="section-white" style="padding:30px;">
+        <div class="container">
+            <div class="row section-container">
+                <div class="col-md-8">
+                    <form class="row contact_form">
+                        <div class="col-md-6 col-sm-6">
+                            <input type="text" class="form-control style_2" id="name_contact" name="name_contact" placeholder="Name">
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <input type="email" id="email_contact" name="email_contact" class="form-control style_2" placeholder="Email">
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <input type="text" id="phone_contact" name="phone_contact" class="form-control style_2" placeholder="Phone" onkeypress="return isNumberKey(event)">
+                        </div>
+                        <div class="col-md-6 col-sm-6 allowmargin">
+                            <input type="text" class="form-control style_2" id="verify_contact" name="name_contact" placeholder="Are you human? 3 + 1 =">
+                        </div>
+                        <div class="col-md-12 col-sm-6">
+                            <textarea rows="5" id="message_contact" name="message_contact" class="form-control contact-message" placeholder="Message"></textarea>
+                        </div>
+                        <div class="col-md-12 col-sm-6">
+                            <button id="submit-contact" type="button" class="btn btn-primary btn-block" onclick="ContactUsQuery()">Send Message</button>
+                        </div>
+                        <div class="col-md-12 col-sm-6" style="margin-top: 15px;text-align: center;">
+                            @Html.ValidationMessageFor(m => m.PhoneNo, "", new { id = "successMessage" })
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="contact-widget">
+                        <h4>Contact Information :</h4>
+                        <p><i class="fa fa-phone" style="margin-top: -2px;"></i> &nbsp;&nbsp;<span> @String.Format("{0}", telephone)</span></p><br>
+                        <p><i class="fa fa-envelope" style="margin-top: -2px;"></i>&nbsp;&nbsp;&nbsp;<span>@String.Format("{0}", contactPageEmailId)</span></p>
+                    </div><!-- end contact-widget -->
+                    <div class="contact-widget">
+                        <h4>Address :</h4>
+                        <p>
+                            @String.Format("{0}", address)
+                        </p>
+                    </div><!-- end contact-widget1-->
+                    <div class="contact-widget">
+                        <h4>Business Hours :</h4>
+                        <i class="fa fa-clock-o"></i>
+                        <p>
+                            @String.Format("{0}", businessHours)
+                        </p>
+                    </div><!-- end contact-widget1 -->
+                </div><!-- end col -->
+            </div>
+        </div><!-- end container -->
+    </section><!-- end section-white -->
+}
+
+
